@@ -1,0 +1,45 @@
+将本地文件导入在Android项目中并使用
+步骤分析：
+1.将文件导入
+2.使用文件
+
+1.将文件导入方法
+	a.最开始曾经思考过随便创建一个文件夹，然后将文件拖进去
+	b.使用了raw文件夹
+	
+2.使用文件
+	c.一开始是想通过File(pathname).readtxt直接读取，但是犹豫这个路径一直找不到，就放弃了这个想法
+	d.后来就采用了raw文件夹的读取方法，创建一个InputStram类，读取该文件
+	val readraw:InputStream = resources.openRawResoutce(R.raw.xxx)
+		A：那么问题来了，该如何使用InputStream类来将读取的数据转换成Int数组
+		将InputStream换成字节数组？
+		val vaos = ByteArrayOutputStream()
+		inputStream.use{it.copyTo(vaos)}
+		这样就转换成字节数组了，然后呢？我尝试了几种办法都没有实现，后放弃。
+		
+		B：使用BufferedReader类读取该文件（在使用之前需要先读取文件）
+		//读取文件
+		val readraw:InputStream = resources.openRawResoutce(R.raw.xxx)
+		//将文件转为BuferedReader
+		var reader:BufferedReader? = readraw.bufferedReader()
+		//读取文件
+		try{
+		val strs:List<String> = reader.readLines()
+		//indices:指数，下标. strs[i]是表示读取的该行
+		for(i in strs.indices){
+		//对该行字符串进行操作     xx.split("m") 以m为分隔符划分字符串 
+		......
+		}catch (e:IOException){
+           e.printStackTrace()
+       }finally {
+	   //记着关掉输入流
+           if (reader != null){
+               try {
+                   reader.close()
+               }catch (e:IOException){
+                   e.printStackTrace()
+               }
+
+           }
+       }
+	   

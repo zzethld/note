@@ -1,0 +1,12 @@
+Intent 详解
+An intent is an abstract（抽象的） description（说明） of an operation（操作） to be performed（被执行）. It can be used with Context#startActivity(Intent) to launch（启动） an android.app.Activity, broadcastIntent to send it to any interested BroadcastReceiver components, and android.content.Context#startService or android.content.Context#bindService to communicate with a background android.app.Service. 
+An Intent provides a facility for performing late runtime binding between the code in different applications. Its most significant use is in the launching of activities, where it can be thought of as the glue（胶状体） between activities. It is basically a passive（被动的） data structure holding an abstract description of an action to be performed.
+
+Intent的使用
+Intent分为显式和隐式
+隐式： 以通过intent拨打电话为例
+//构建一个Intent  里面为action,系统内置
+Intent intent = new Intent(Intent.ACTION_CALL);
+intent.setData(Uri.parse("tel:10086"));
+//设定之后得启动才行
+startActivity(intent);

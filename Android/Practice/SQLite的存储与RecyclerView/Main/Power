@@ -1,0 +1,45 @@
+package com.example.xzsx;
+
+public class Power {
+    String  time;
+    String demage;
+    String defense;
+    String blood;
+    String power_point;
+    String skill_point;
+
+    public Power(String time, String demage, String defense, String blood, String power_point, String skill_point) {
+        this.time = time;
+        this.demage = demage;
+        this.blood = blood;
+        this.defense = defense;
+        this.power_point = power_point;
+        this.skill_point = skill_point;
+    }
+
+
+    public String getBlood() {
+        return blood;
+    }
+
+    public String getDefense() {
+        return defense;
+    }
+
+    public String getDemage() {
+        return demage;
+    }
+
+    public String getPower_point() {
+        return power_point;
+    }
+
+    public String getSkill_point() {
+        return skill_point;
+    }
+
+    public String getTime() {
+        return time;
+    }
+}
+

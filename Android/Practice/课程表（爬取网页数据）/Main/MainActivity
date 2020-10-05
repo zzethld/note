@@ -1,0 +1,232 @@
+package com.example.jsouptest;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
+
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    ImageView imageView;
+    TextView textView;
+    Button button;
+    String title;
+    Elements elements1;
+    Map<String, String> datas;
+    String cookies ;
+    Button buttonget;
+    String randomcode;
+    EditText randomcodes;
+    String imgcode;
+    String USER_Agent = "User-Agent";
+    String User_Agent_Value = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
+    Map<String, String> map;
+    String userName = "1705020202";
+    String pwd = "222411";
+    int i = 1;
+    int j = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        textView = findViewById(R.id.titles);
+        button = findViewById(R.id.getitle);
+        button.setOnClickListener(this);
+        buttonget = findViewById(R.id.getcode);
+        buttonget.setOnClickListener(this);
+        imageView = (ImageView) findViewById(R.id.Random);
+        randomcodes = findViewById(R.id.randomcode);
+        datas = new HashMap<>();
+
+        /*
+               datas.put("x", "29");
+                    datas.put("y", "14");
+
+                    Connection connection = Jsoup.connect("http://kdjw.hnust.edu.cn:8080/kdjw/").ignoreContentType(true).followRedirects(true);
+                    connection.header(USER_Agent, User_Agent_Value);
+                    Connection.Response response = connection.execute();
+                    Document document = connection.post();
+                    elements1 = document.select("img[src]");
+                    imgcode = elements1.attr("src");
+                     map = response.cookies();
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        cookies = entry.getKey() + "-" + entry.getValue();
+         */
+
+        new Thread(() -> {
+            try {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.INTERNET}, 1);
+                } else {
+                    Connection con = Jsoup.connect("http://kdjw.hnust.edu.cn:8080/kdjw/");
+                    con.header(USER_Agent, User_Agent_Value);
+                    Connection.Response rs = con.execute();
+                    Document d1 = con.post();
+                    Elements eleList = d1.select("form");
+/*
+                    for (Element e : eleList.get(1).getAllElements()) {
+                        // 设置用户名
+                        if (e.attr("name").equals("login")) {
+                            e.attr("value", userName);
+                        }
+                        // 设置用户密码
+                        if (e.attr("name").equals("password")) {
+                            e.attr("value", pwd);
+                        }
+                        // 排除空值表单属性
+                        if (e.attr("name").length() > 0) {
+                            datas.put(e.attr("name"), e.attr("value"));
+                        }
+                    }
+
+
+ */
+                title = eleList.html();
+                    elements1 = d1.select("img[src]");
+                    imgcode = elements1.attr("src");
+                    map = rs.cookies();
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        cookies = entry.getKey() + "-" + entry.getValue();
+                    }
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+
+
+
+    }
+
+    public   void simpletest(String userName, String pwd) throws Exception{
+    Connection con = Jsoup.connect("http://kdjw.hnust.edu.cn:8080/kdjw/");
+    con.header(USER_Agent, User_Agent_Value);
+    Connection.Response rs = con.execute();
+    Document d1 = Jsoup.parse(rs.body());
+        List<Element> eleList = d1.select("form");
+        for(Element e:eleList.get(1).getAllElements()){
+            if(e.attr("name").equals("USERNAME")){
+                e.attr("value",userName);
+            }
+            if(e.attr("name").equals("PASSWORD")){
+                e.attr("value",pwd);
+            }
+            if (e.attr("name").length() >0){
+                datas.put(e.attr("name"),e.attr("value"));
+            }
+        }
+        Document document = con.post();
+        elements1 = document.select("img[src]");
+        imgcode = elements1.attr("src");
+        map = rs.cookies();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            cookies = entry.getKey() + "-" + entry.getValue();
+        }
+
+    }
+
+
+    /*
+        public void sendRequestWithOkhttp(){
+            new Thread(()->{
+                try{
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url()
+                            .build();
+                }
+            }
+            )
+        }
+
+     */
+
+    public void conjsoup_seconed(){
+        new Thread(() -> {
+            try {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.INTERNET}, 1);
+                } else {
+                        Connection connection = Jsoup.connect("http://kdjw.hnust.edu.cn:8080/kdjw/framework/main.jsp");
+                    datas.put("RANDOMCODE",randomcode);
+                    Connection.Response res = connection
+                            .ignoreContentType(true)
+                            .followRedirects(true)
+                            .method(Connection.Method.POST)
+                            .data(datas)
+                            .cookies(map)
+                            .execute();
+
+                     title = res.body();
+                    map = res.cookies();
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        cookies = entry.getKey() + "-" + entry.getValue();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }).start();
+    }
+
+
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.getitle:
+                textView.setText(title);
+                Glide.with(this)
+                        .load( "http://kdjw.hnust.edu.cn:8080" + imgcode)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(imageView);
+                break;
+        case R.id.getcode:
+            randomcode = randomcodes.getText().toString();
+            button.setText(randomcode);
+            conjsoup_seconed();
+
+        textView.setText(title);
+        break;
+            default:
+                break;
+
+        }
+        }
+    }

@@ -1,0 +1,3 @@
+ScrollView 和 RecyclerView  
+ScrollView可以理解为放置各类东西的，而RecyclerView是放置一类东西的。
+大概是 ScrollView 可以镶嵌着RecyclerView

@@ -1,0 +1,110 @@
+使用RecycleView构建List
+RecycleView与ListView最大的区别就是RecyclerView是通过单独的适配器来构建画面，相比于ListView要方便很多，很多功能也适用更多。
+所以，除非特别简单，我们一般适用RecyclerView。
+
+在使用RecyclerView时我们一般需要在dependence中添加对该库的依赖
+imp------  androidx.xxxxxxxxxx  //记不了，去Google Dev中查
+
+
+
+一般RecyclerView由以下文件构成
+Java：
+MainActivity			//主函数
+ClassName			//构造类
+ClassNameAdapter	//为该构造类构建画面
+
+RES：
+main.xml		//主要Layout
+ClassName_item.xml		//构造类的页面布局
+
+下面上面文件的例子
+MainActivity：
+{
+private List<ClassName> ClassNameList = new ArrayList<>();
+onCreate(Bundle saveInstanceState){
+super.onCreate();
+setContentView();
+//初始化数据，就是构造类的数据输入 如果仅仅是对数据的输入，可以在前面即可。但是如果是动态输入则需要在整个布局构建完成后再进行数据输入。
+//但是如果是动态输入则需要在整个布局构建完成后再进行数据输入，动态输入需要调用Adapter.notifyDataSetChanged()来刷新构造页面(写在每轮数据输入后面，循环内)
+init();
+
+RecyclerView ClassNameRecyclerView = findViewById(R.id.recycler_view);
+//LinearLayoutManager 后面有解释
+LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+ClassNameRecyclerView.setLayoutManager(layoutManager);
+
+ClassNameAdapter adapter = new ClassNameAdapter(ClassNameList);
+ClassNameRecyclerView.setAdapter(adapter);
+
+}
+}
+
+ClassName
+{
+	//就是一般普通的类构造
+	//没什么写的，把构造函数写一下，再把需要的参数返回一下。
+}
+
+ClassNameAdapter extends RecyclerView.Adapter<ClassNameAdapter.ViewHolder>
+{
+	private List<ClassName> mClassNameList;				//这个我也不太清楚为什么
+		
+	static class ViewHolder extends RecyclerView.Holder{
+		//为该类定义的内容就是Layout中的物件
+		//ViewHolder即可以理解为一组信息的画面构成，比方说通讯录中，那么一个联系人就是ViewHolder。
+		
+	
+		ViewHolder(View view){
+			super(view);
+		}
+	}
+	
+	public ClassNameAdapter(List<ClassName>ClassNameList){
+		mClassNameList = ClassNameList;
+	}
+	
+	//create a new RecyclerView.ViewHolder and initializes(初始化) some private fields to be used by RecyclerView.
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ClassName_item.xml, parent, false);
+		return new ViewHolder(view)
+	}
+	
+	//update the RecyclerView.ViewHolder contents with the item at the given position and also sets up some private fields to be used by RecyclerView.
+	public void onBindViewHolder(ViewHolder viewholder, int position){
+		ClassName classname = mClassNameList.get(position);
+		holder.构建名.set....();
+	}
+	//Returns the total number of items in the data set held by the adapter.
+	// 如果一直没有画面，可能是返回的数量为0
+	public int getItemCount(){	
+		return mClassNameList.size();
+	}
+}
+	
+main.xml:
+{
+<LinearLayout
+	.......	
+	.......
+	.......
+	
+	<androidx.recyclerview.widget.RecyclerView
+	.......
+	.......
+	.......
+	/>
+	
+</LinearLayout>
+}
+
+ClassName_item.xml:
+{
+	//正常布局，就是一对数据得Layout
+	
+}
+
+LayoutManager解释:
+{
+	A LayoutManager is responsible for measuring(测量) and positioning item views within a RecyclerView as well as determining（制定） the policy（政策）for when to recycle item views that are no longer visible to the user. By changing the LayoutManager a RecyclerView can be used to implement（使生效） a standard vertically scrolling（滚动） list, a uniform（一致的） grid（网格/坐标方格）, staggered（交错的） grids, horizontally scrolling collections and more. Several stock（陈旧的/常备的） layout managers are provided for general use. 
+}

@@ -1,0 +1,15 @@
+onTouch onClick onLongClick 区别与联系
+一次有效的点击可以分为以下部分：
+1.Action_Down //手指按下
+2.Action_xxxx  //手指按下以后并未抬起，即还有没Aciton——UP
+3.Action_UP //手指抬起
+
+onTouch则是负责1，3
+onClick：一次完整的点击，即按下并且抬起
+onLongClick:在按下之后，长按，即没有抬起之前
+
+总体来说触发顺序为：
+onAction_Down
+onLongClick
+onAction_Up
+onClick

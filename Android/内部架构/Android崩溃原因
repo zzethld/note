@@ -1,0 +1,7 @@
+记Android程序崩溃 无法进去，每次原因如下
+1.在super.onCreate()之前声明了两个Button
+
+eg:Button button1 = new Button;
+super.onCreate();
+.......
+

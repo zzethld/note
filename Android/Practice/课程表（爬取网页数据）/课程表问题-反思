@@ -1,0 +1,27 @@
+
+实现方法：
+自己采用的是先连接该网站，获取验证码以及COOKIE。
+第二次登陆的时候，我们再使用上面获得的COOKIE以及手动输入验证码，进行表单登陆、
+
+现在的问题：
+cookie进去之后再次登录会更改
+JSOUP登录表单没有反馈
+
+曾经的问题：
+如何解析HTML
+    考虑过很多方式，最后选择了JSOUP，所有的获取方法应该类似于获取该页面的HTML文档，再对其中的文档进行解析
+权限使用问题
+    高版本Adnroid非常重视权限，所以我们在使用大部分功能时首先要获取权限，如果没有权限就申请权限（具体看权限文档）
+JSOUP连接
+    可以参考JSOUP官方文档
+如何使用JSOUP获取的文档
+    最主要是获取方法，参考官方文档后可以用慕课网的HTML教程进行辅助练习
+怎么获取已连接网站的COOKIE
+    Connection connection = Jsoup.connect();
+     Connection.Response response = connection.execute();
+     map = response.cookies();
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        cookies = entry.getKey() + "-" + entry.getValue();
+                        }
+验证码的加载，即网络图片的加载
+    使用Glide（书签里面有）加载，曾经遇到过一个问题，它加载网络图片默认是有缓存的，所以验证码不要保存。

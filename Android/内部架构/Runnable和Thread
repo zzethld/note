@@ -1,0 +1,64 @@
+Runnable of Thread
+官网释义：
+Runnable:    public interface Runnable
+The Runnable interface(接口) should be implemented by any class whose instances（实例） are intended（意图去） to be executed（执行） by a thread. The class must define a method of no arguments（争议） called run.
+
+This interface is designed to provide a common protocol（协议） for objects that wish to execute code while they are active. For example, Runnable is implemented by class Thread. Being active simply means that a thread has been started and has not yet been stopped.
+
+In addition, Runnable provides the means for a class to be active while not subclassing（子类） Thread. A class that implements Runnable can run without subclassing Thread by instantiating（实例化） a Thread instance and passing itself in（通过） as the target（目标）. In most cases, the Runnable interface should be used if you are only planning to override（重写） the run() method and no other Thread methods. This is important because classes should not be subclassed unless the programmer intends on modifying（调整） or enhancing（增强） the fundamental（根本的） behavior of the class.
+最后一句大概翻译： 在一般情况下并不应该将一个类子类化（继承Thread），除非我们想改变他这个类根本的行为，应该说的是Thread类吧？
+
+Thread  ： public class Thread extends Objects implements Runnable
+A thread is a thread of execution in a program. The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.
+
+Every thread has a priority. Threads with higher priority are executed in preference to threads with lower priority. Each thread may or may not also be marked as a daemon. When code running in some thread creates a new Thread object, the new thread has its priority initially set equal to the priority of the creating thread, and is a daemon thread if and only if the creating thread is a daemon.
+
+When a Java Virtual Machine starts up, there is usually a single non-daemon thread (which typically calls the method named main of some designated class). The Java Virtual Machine continues to execute threads until either of the following occurs:
+
+The exit method of class Runtime has been called and the security manager has permitted the exit operation to take place.
+All threads that are not daemon threads have died, either by returning from the call to the run method or by throwing an exception that propagates beyond the run method.
+There are two ways to create a new thread of execution. One is to declare a class to be a subclass of Thread. This subclass should override the run method of class Thread. An instance of the subclass can then be allocated and started. For example, a thread that computes primes larger than a stated value could be written as follows:
+
+     class PrimeThread extends Thread {
+         long minPrime;
+         PrimeThread(long minPrime) {
+             this.minPrime = minPrime;
+         }
+
+         public void run() {
+             // compute primes larger than minPrime
+              . . .
+         }
+     }
+ 
+
+The following code would then create a thread and start it running:
+
+     PrimeThread p = new PrimeThread(143);
+     p.start();
+ 
+
+The other way to create a thread is to declare a class that implements the Runnable interface. That class then implements the run method. An instance of the class can then be allocated, passed as an argument when creating Thread, and started. The same example in this other style looks like the following:
+
+     class PrimeRun implements Runnable {
+         long minPrime;
+         PrimeRun(long minPrime) {
+             this.minPrime = minPrime;
+         }
+
+         public void run() {
+             // compute primes larger than minPrime
+              . . .
+         }
+     }
+ 
+
+The following code would then create a thread and start it running:
+
+     PrimeRun p = new PrimeRun(143);
+     new Thread(p).start();
+ 
+
+Every thread has a name for identification purposes. More than one thread may have the same name. If a name is not specified when a thread is created, a new name is generated for it.
+
+Unless otherwise noted, passing a null argument to a constructor or method in this class will cause a NullPointerException to be thrown.

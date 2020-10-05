@@ -1,0 +1,69 @@
+绑定分为两种，数据绑定和视图绑定
+数据绑定：可以设计数据类与VIEW绑定，当数据改变，VIEW的属性也随之变化。
+视图绑定：通过视图绑定，可以不用findviewById()直接使用，不过在我看来好像用处不大，可以直接用ID名，不需要绑定。
+
+通用步骤：
+1.在GRADLE（app）里面添加依赖
+android{
+......
+
+	dataBinding{
+		enabled = true
+	}
+}
+
+2.修改Layout，让它明白你要用BINDING。就是将Layout提出来，布局成一个以LAYOUT为外包的。
+<layout xmlns:......
+......
+>
+<LinearLayout
+......
+>
+
+......
+......
+......
+</LinearLayout>
+</layout>
+
+3.在Main文件里面操作
+class MainActivity : AppCompatActivity(){
+	private lateinit var binding : ActivityMainBinding
+	......
+	override fun onCreate(){
+	binding = DataBindingUtil.setContentView(this,R.layout.activity_main) // ( context , 布局文件)
+	}
+	}
+	
+4.如果要使用视图绑定，那么直接使用即可
+eg: activity_main存在一个ID：texts
+binding.texts就可以代表了，不需要再使用findViewById
+
+5.如果是使用数据绑定，那么需要
+a.创建一个数据类
+b.在布局里面添加Data类 layout与LinearLayout之间
+	<layout ......>
+	<data>
+		<variable
+		//	就是视图中数据类的名字，不与之前创建的数据类名字相同，最主要是为了在视图中找到他
+			name = "abc" 
+		// 这个类在哪，一般为com.xxxxxx.xxx.xxx
+			type = "" />
+	</data>
+
+c.然后在布局里面需要的VIEW中引用它
+<TextView
+//abc是视图中数据类的名字，后面的name 是创建的数据类的属性，也是可以是其他属性。
+android:text =  "@={abc.name}"
+
+d.最后在Main文件里绑定它，就是将视图数据类与实际数据类绑定起来。我们一般先创建一个类，然后再绑定他 我们创建的是MyName
+MainActivity.....{
+private val myName = MyName()
+......
+onCreate(){
+......
+//第一个myName是视图的数据绑定类 第二个myName是之前创建的类
+binding.myName = myName 
+....
+然后尽情享用吧
+}}

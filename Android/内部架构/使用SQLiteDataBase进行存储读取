@@ -1,0 +1,78 @@
+使用SQLiteDatabase 进行数据的存储
+SQLiteDatabase 是一个抽象类，所以需要写一个类来继承
+
+public class MyDataBaseHelper extends SQLiteOpenHelper {
+	//类型解析往下看
+    public static final String CREATE_BOOK = "create table Book(id integer primary key autoincrement, author text, price real, pages integer, name text)";
+    private Context mContext;
+    public MyDataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+        mContext = context;
+    }
+	
+    @Override
+        public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_BOOK);
+        Toast.makeText(mContext,"Create succeeded", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+}
+
+
+Main.java
+//先创建一个自己写的类，再使用该类的getWritableDatabase()创建一个数据库
+//该程序实现了创建和查询两个方法
+        protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        editText = findViewById(R.id.trs);
+        Button button1 = findViewById(R.id.savebutton);
+        Button button2 = findViewById(R.id.loadbutton);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        dbHelper = new MyDataBaseHelper(this, "BookStore.db", null, 1);
+    }
+
+    @Override
+
+
+
+    public void onClick(View v) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        switch (v.getId()){
+            case R.id.savebutton:
+                ContentValues values = new ContentValues();
+                values.put("name",editText.getText().toString() );
+                values.put("author", "Dan Bob");
+                values.put("pages", 510);
+                values.put("price", 19.95 );
+                db.insert("Book", null, values);
+            case R.id.loadbutton:
+                Cursor cursor = db.query("Book", null, null, null, null, null, null);
+                if(cursor.moveToFirst()){
+                    do{
+                        String name = cursor.getString(cursor.getColumnIndex("name"));
+                        double price = cursor.getDouble(cursor.getColumnIndex("price"));
+                        String author = cursor.getString(cursor.getColumnIndex("author"));
+                       int page = cursor.getInt(cursor.getColumnIndex("price"));
+                       editText.setText(name);
+                    }while (cursor.moveToNext());
+                }
+                cursor.close();
+        }
+    }
+}
+
+SQLiteDatabase 数据类型{
+	NULL	值是一个 NULL 值。
+INTEGER	值是一个带符号的整数，根据值的大小存储在 1、2、3、4、6 或 8 字节中。
+REAL	值是一个浮点值，存储为 8 字节的 IEEE 浮点数字。
+TEXT	值是一个文本字符串，使用数据库编码（UTF-8、UTF-16BE 或 UTF-16LE）存储。
+BLOB	值是一个 blob 数据，完全根据它的输入存储。
+	
+}

@@ -1,0 +1,56 @@
+使用SharedPrefereces储存读取数据
+SharedPrefereces 是使用键值对 （m,n）
+//存储
+//创建一个SharedPreferences.Editor 对象
+SharedPrefereces.Editor editor = getSharedPreferences("文件名",（存储方式）MODE_PRIVATE).edit();
+//使用创建的对象来进行存储操作
+editor.putString/int.....(m,n);
+//最后提交   
+editor.apply();
+
+//读取
+//创建一个SharedPreferences对象
+SharedPrefereces pref = getSharedPreferences();
+//使用对象来进行读取操作
+type getthing = pref.getType(m,n);
+
+
+
+//EG:使用SharedPrefereces储存读取数据 有一个EDITTEXT 和两个按钮 分别进行存储和读取操作
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private EditText editText;
+    private Button button;
+    private SharedPreferences perf;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        editText = findViewById(R.id.trs);
+        Button button1 = findViewById(R.id.savebutton);
+        Button button2 = findViewById(R.id.loadbutton);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        perf = getSharedPreferences("data", MODE_PRIVATE);
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.savebutton:
+                SharedPreferences.Editor editor = perf.edit();
+                String input = editText.getText().toString();
+                editor.putString("Password", input);
+                editor.apply();
+                editText.setSelection(editText.getText().length());
+            case R.id.loadbutton:
+                String password = perf.getString("Password", "");
+                editText.setText(password);
+                editText.getSelectionEnd();
+                editText.setSelection(editText.getText().length());
+        }
+    }
+}

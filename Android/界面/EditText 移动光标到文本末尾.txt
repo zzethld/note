@@ -1,0 +1,2 @@
+EditText editText = findViewById(R.id.edit);
+editText.setSelection(editText.getText().length());

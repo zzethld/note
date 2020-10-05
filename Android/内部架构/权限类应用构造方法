@@ -1,0 +1,17 @@
+使用Intent启动应用或者获取数据
+之前我也使用过Intent不过都无法使用，原因就是在高版本需要获取权限才能使用，如果没有获取权限那么则无法运行。我们在模拟器上没有经过安装步骤，所以没有获取到权限。
+所以现在的套路是，先查看自己是否有权限，没有权限则申请。
+ContextCompat.checkSelfPermission(Context, the name of permission);这是查询自身是否有权限
+eg:if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.xxxxx) != PackgeManager.PERMISSION.GRANTED){
+ActivityCompact.requestPermissions(MainActivity.this, new String[]{Manifest.permission.xxxx}, 1);
+}else{
+do();
+}
+
+PackgeManager.name 是权限名
+
+
+重写onRequestPermissionsResult(int requestCode, String[] permission, int[] grantResults){
+								Activity实例    申请的权限名		请求码（一般为1）
+								如果为1则申请成功，若不然则申请失败
+								

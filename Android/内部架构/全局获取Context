@@ -1,0 +1,15 @@
+全局获取Context
+新建一个MyApplication（名字随意啦）让他继承APPLICATION，重写ONCREATE方法和GETCONTEXT方法，再在MANIFEST文件中加入该包名。
+public class MyApplication extends Application{
+private static Context context;
+public void onCreate(){
+context = getApplicationContext();
+}
+public Static Context getContext(){
+return context;
+}
+
+ManiFest
+<applicaton
+	android:name = "com.***********"> //完整的包名
+	.......>

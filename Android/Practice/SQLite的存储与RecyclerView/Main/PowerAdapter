@@ -1,0 +1,62 @@
+package com.example.xzsx;
+
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+public class PowerAdapter extends RecyclerView.Adapter<PowerAdapter.ViewHolder> {
+    private List<Power> mPowerList;
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.power_item, parent, false);
+        return  new ViewHolder(view);
+    }
+    public PowerAdapter(List<Power>mPowerList){
+        this.mPowerList = mPowerList;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Power power = mPowerList.get(position);
+        holder.skillpoint.setText(power.getSkill_point());
+        holder.powerpoint.setText(power.getPower_point());
+        holder.bloodnum.setText(power.getBlood());
+        holder.defensenum.setText(power.getDefense());
+        holder.demagenum.setText(power.getDemage());
+        holder.timetable.setText(power.getTime());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mPowerList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView timetable;
+        TextView demagenum;
+        TextView defensenum;
+        TextView bloodnum;
+        TextView powerpoint;
+        TextView skillpoint;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            timetable = itemView.findViewById(R.id.timetable);
+            demagenum = itemView.findViewById(R.id.number_demage);
+            defensenum = itemView.findViewById(R.id.number_defense);
+            bloodnum = itemView.findViewById(R.id.number_blood);
+            powerpoint = itemView.findViewById(R.id.number_power);
+            skillpoint = itemView.findViewById(R.id.number_skill);
+        }
+    }
+
+
+}
+

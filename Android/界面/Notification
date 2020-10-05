@@ -1,0 +1,33 @@
+通知的使用方法
+
+//只是基础版，后续如果学习了会增加
+
+NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+				 Intent intent = new Intent(this, MainActivity.class);
+				 //PendingIntent 可以理解为possive Intent ,并不立即执行，而是在满足了一定条件之后才进行执行
+                PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+
+                //Build.VERSION.SDK_INT 是判断该手机的版本号  VERSION_CODES.X X 为版本号， O 是指 Android 8
+                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    //只在Android O之上需要渠道，这里的第一个参数要和下面的channelId一样
+                    NotificationChannel notificationChannel = new NotificationChannel("1", "name", NotificationManager.IMPORTANCE_HIGH);
+                    //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，通知才能正常弹出
+                    manager.createNotificationChannel(notificationChannel);
+                }
+				
+                //Builder(context)已经被淘汰了，需要使用Builder(context, String nchannelId) 后面的是频道，如同上面申请的频道一样，只有申请的才能用
+                Notification notification = new NotificationCompat.Builder(this, "1").setContentTitle("This is title") //Notification title
+                        .setContentText("This is Text ")																// Notification Text
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                       .setContentIntent(pi)
+                        //使通知点击之后消失
+                        .setAutoCancel(true)
+                        .build();
+                manager.notify(1, notification);
+				
+				
+	PendingIntent:
+	A description of an Intent and target action to perform with it. Instances of this class are created with getActivity(Context, int, Intent, int), getActivities(Context, int, Intent[], int), getBroadcast(Context, int, Intent, int), and getService(Context, int, Intent, int); the returned object can be handed to other applications so that they can perform the action you described on your behalf at a later time.

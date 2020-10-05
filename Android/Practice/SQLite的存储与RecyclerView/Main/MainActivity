@@ -1,0 +1,121 @@
+package com.example.xzsx;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private List<Power> powerList = new ArrayList<>();
+    PowerAdapter adapter;
+    TextView num_demage;
+    TextView num_defense;
+    TextView num_blood;
+    TextView num_skill;
+    TextView num_power;
+    XZSXDataBaseHelper dbHelper;
+    SQLiteDatabase db;
+    LineChart mLineChar;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        //RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new PowerAdapter(powerList);
+        recyclerView.setAdapter(adapter);
+
+        Button save = findViewById(R.id.save);
+        Button query = findViewById(R.id.query);
+        save.setOnClickListener(this);
+        query.setOnClickListener(this);
+        num_demage = findViewById(R.id.demage_number);
+        num_defense = findViewById(R.id.defense_number);
+        num_blood = findViewById(R.id.blood_number);
+        num_skill = findViewById(R.id.skill_number);
+        num_power = findViewById(R.id.power_number);
+
+        dbHelper = new XZSXDataBaseHelper(this, "XZData.db", null, 1);
+
+    }
+
+
+
+
+
+    public void getData() {
+        db = dbHelper.getWritableDatabase();
+        String time, demage, defense, blood, power_point, skill_point;
+          Cursor  cursor = db.query("XZ", null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                while (cursor.moveToNext()) {
+                    time = cursor.getString(cursor.getColumnIndex("time"));
+                    demage = cursor.getString(cursor.getColumnIndex("damage"));
+                    defense = cursor.getString(cursor.getColumnIndex("defense"));
+                    blood = cursor.getString(cursor.getColumnIndex("blood"));
+                    power_point = cursor.getString(cursor.getColumnIndex("power_point"));
+                    skill_point = cursor.getString(cursor.getColumnIndex("skill_point"));
+                    Power power = new Power(time, demage, defense, blood, power_point, skill_point);
+
+                    powerList.add(power);
+                    adapter.notifyDataSetChanged();
+                }
+
+                cursor.close();
+            }
+        }
+
+     public void insertData(){
+         db = dbHelper.getWritableDatabase();
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+                String str = formatter.format(curDate);
+
+        // String str = "2020-1-52";
+         ContentValues values = new ContentValues();
+         values.put("time", str);
+         values.put("damage", num_demage.getText().toString());
+         values.put("defense", num_defense.getText().toString());
+         values.put("blood", num_blood.getText().toString());
+         values.put("power_point", num_power.getText().toString());
+         values.put("skill_point", num_skill.getText().toString());
+         db.insert("XZ", null, values);
+         values.clear();
+
+     }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.save:
+             insertData();
+                break;
+            case R.id.query:
+                getData();
+                break;
+            default:
+                    break;
+
+
+        }
+    }
+}

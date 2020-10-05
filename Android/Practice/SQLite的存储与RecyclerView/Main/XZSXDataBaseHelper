@@ -1,0 +1,34 @@
+package com.example.xzsx;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class XZSXDataBaseHelper extends SQLiteOpenHelper {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+    String str = formatter.format(curDate);
+    private Context mContext;
+    public static final String Create_XZ = "create table XZ(id integer primary key autoincrement,time varchar(20), damage text, defense text, blood text,power_point text,skill_point text)";
+    public XZSXDataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+        mContext = context;
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(Create_XZ);
+        Toast.makeText(mContext, "Create succeeded", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+}

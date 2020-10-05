@@ -1,0 +1,78 @@
+给定一个整数数组，返回所有数对之间的第 k 个最小距离。一对 (A, B) 的距离被定义为 A 和 B 之间的绝对差值。
+
+示例 1:
+
+输入：
+nums = [1,3,1]
+k = 1
+输出：0 
+解释：
+所有数对如下：
+(1,3) -> 2
+(1,1) -> 0
+(3,1) -> 2
+因此第 1 个最小距离的数对是 (1,1)，它们之间的距离为 0。
+提示:
+
+2 <= len(nums) <= 10000.
+0 <= nums[i] < 1000000.
+1 <= k <= len(nums) * (len(nums) - 1) / 2.
+
+### 解题思路
+深感惭愧，时隔了多少天才把这题做完（最主要是各种繁杂事情加上自己的浪荡，得改）
+这道题我看到的第一时间，就想到了先排序。
+不过在简单的思考过后，我就又放弃了。
+最开始以为排序对查出有多少对没有任何帮助（没有想到双指针）
+在看了大佬的代码过后，果然自己太菜。
+这道题在了解思路过后，反而跟简单的题一样，就是一个二分法即可，不过我们是对k在（0，最大差值）之间二分。
+
+
+上次以为自己已经基本掌握了二分法，简直滑稽可笑。在这次的后续中，我看到了很多以前没有注意到的细节。
+边界选择：whle()里面的大小问题，最后if()二分的大小问题
+为什么while循环条件是left<right? 而不是left<=right?
+为什么if里面判断条件为sum<k,left = mid + 1?而不是sum<=k? =添加与否影响在哪？
+
+好吧，本来写了一大堆分析，感觉也没啥用。
+自己对二分法的理解很粗浅，在深入理解之前，我觉得二分法可以划分为：大于，大于等于，等于（必定存在/可能不存在）
+就像这道题一般，是寻找一个必定存在的值，所以我才能这么写。
+在剩下最后left和right的时候，我没有判断最后得出的left/right是否符合题目要求，因为必定存在，所以可以直接得出。
+
+我觉得STL中lower_bound源码就写的很好，可以很好的应对各种情况，使用开始位置+长度，是一个非常棒的选择。
+
+
+
+
+
+### 代码
+
+```cpp
+class Solution {
+public:
+    int smallestDistancePair(vector<int>& nums, int k) {
+        int n = nums.size();
+        int left , right ;
+        int mid; 
+        int start,end;
+        int sum = 0;
+    sort(nums.begin(), nums.end());
+    left  = 0; right = nums[n-1] - nums[0];
+    while(left < right)
+    {
+        mid = (left + right) /2;
+        sum = 0;
+        for( start = 0,end = 1; start < n; start++)
+            while(end < n && nums[end] - nums[start] <= mid)
+                {
+                    sum = sum + end - start;
+                    end++;
+                }
+        if(sum < k)
+        left = mid + 1;
+        else 
+        right = mid ;
+        
+    }
+    return left;
+    }
+};
+```
